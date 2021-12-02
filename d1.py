@@ -17,21 +17,21 @@ class DepthChecker:
                 if not line.isnumeric():
                     print("Input in not numeric! Input: " + line)
                     continue
-                
+
                 out.append(int(line))
 
         self.input = out
 
     def depth_checker_sum3(self):
-        sum = old_sum = prevBigger = 0
+        sum = prevBigger = 0
 
         for x in range(len(self.input)):
             if x < 3:
                 sum = sum + self.input[x]
 
             if x >= 3:
-                old_sum = sum 
-                sum = sum + self.input[x] - self.input[x-3]
+                old_sum = sum
+                sum = sum + self.input[x] - self.input[x - 3]
 
                 if sum > old_sum:
                     prevBigger += 1
@@ -39,16 +39,16 @@ class DepthChecker:
         self.sweepTotal = prevBigger
 
     def depth_checker_simple(self):
-        prevBigger = 0
+        prev_bigger = 0
 
         for x in range(len(self.input)):
             if x == 1:
                 continue
 
-            if self.input[x] > self.input[x-1]:
-                prevBigger += 1
+            if self.input[x] > self.input[x - 1]:
+                prev_bigger += 1
 
-        self.sweepTotal = prevBigger
+        self.sweepTotal = prev_bigger
 
     def perform_check(self, simple):
         if simple:
@@ -56,10 +56,12 @@ class DepthChecker:
         else:
             self.depth_checker_sum3()
 
+
 def main():
     checker = DepthChecker()
     checker.perform_check(False)
     print(checker.sweepTotal)
+
 
 if __name__ == "__main__":
     main()
