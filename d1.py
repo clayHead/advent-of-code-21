@@ -23,7 +23,7 @@ class DepthChecker:
         self.input = out
 
     def depth_checker_sum3(self):
-        sum = prevBigger = 0
+        sum = prev_bigger = 0
 
         for x in range(len(self.input)):
             if x < 3:
@@ -34,9 +34,9 @@ class DepthChecker:
                 sum = sum + self.input[x] - self.input[x - 3]
 
                 if sum > old_sum:
-                    prevBigger += 1
+                    prev_bigger += 1
 
-        self.sweepTotal = prevBigger
+        self.sweepTotal = prev_bigger
 
     def depth_checker_simple(self):
         prev_bigger = 0
