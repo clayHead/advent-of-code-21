@@ -1,3 +1,11 @@
+def error_checker(input):
+    line = input.strip()
+    if not line.isnumeric():
+        print("Input in not numeric! Input: " + line)
+        return False
+    return True
+
+
 class DepthChecker:
     def __init__(self):
         self.sweepTotal = 0
@@ -12,10 +20,7 @@ class DepthChecker:
             lines = f.readlines()
 
             for line in lines:
-                # Error Checker
-                line = line.strip()
-                if not line.isnumeric():
-                    print("Input in not numeric! Input: " + line)
+                if not error_checker(line):
                     continue
 
                 out.append(int(line))
