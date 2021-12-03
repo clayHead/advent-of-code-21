@@ -14,8 +14,6 @@ class DepthChecker:
         self.get_input()
 
     def get_input(self):
-        out = []
-
         with open('d1-input.csv', newline='') as f:
             lines = f.readlines()
 
@@ -23,9 +21,7 @@ class DepthChecker:
                 if not error_checker(line):
                     continue
 
-                out.append(int(line))
-
-        self.input = out
+                self.input.append(int(line))
 
     def depth_checker_sum3(self):
         sum = prev_bigger = 0

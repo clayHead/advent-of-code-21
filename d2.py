@@ -24,10 +24,7 @@ class SubController:
         self.get_input()
 
     def get_input(self):
-        out = []
-        file = 'd2-input.csv'
-
-        with open(file, newline='') as f:
+        with open('d2-input.csv', newline='') as f:
             lines = f.readlines()
 
             for line in lines:
@@ -35,9 +32,7 @@ class SubController:
 
                 if error_check(split):
                     split[1] = int(split[1])
-                    out.append(split)
-
-        self.instructions = out
+                    self.instructions.append(split)
 
     def get_final_position(self):
         return self.depth * self.horizontal
