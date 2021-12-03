@@ -1,2 +1,8 @@
 # Test files
 TestInputs/
+
+.gitignore
+
+# Misc
+*.xml
+*.iml
