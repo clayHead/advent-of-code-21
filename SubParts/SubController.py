@@ -24,7 +24,7 @@ class SubController:
         self.get_input()
 
     def get_input(self):
-        with open('../PuzzleInputs/d2-input.csv', newline='') as f:
+        with open('../PuzzleInputs/d2-input', newline='') as f:
             lines = f.readlines()
 
             for line in lines:

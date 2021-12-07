@@ -14,7 +14,7 @@ class DepthChecker:
         self.get_input()
 
     def get_input(self):
-        with open('../PuzzleInputs/d1-input.csv', newline='') as f:
+        with open('../PuzzleInputs/d1-input', newline='') as f:
             lines = f.readlines()
 
             for line in lines:
