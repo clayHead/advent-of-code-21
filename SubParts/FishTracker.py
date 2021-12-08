@@ -26,13 +26,20 @@ class FishTracker:
         with open('../PuzzleInputs/d6-input', newline='') as f:
             lines = f.readlines()
 
-            # TODO Error Checker
             strip = lines[0].strip()
             split = strip.split(',')
 
             for age in split:
-                self.fish.append(Fish(int(age)))
-                self.stats[int(age)] += 1
+                try:
+                    val = int(age)
+                    if val == 0 or val > 5:
+                        print("ERROR: Value is not between 1 and 5 (you cannot have a fish younger than 1 or older "
+                              "than 5 to start)")
+                        continue
+                except ValueError:
+                    print("ERROR! Value is not an int")
+                self.fish.append(Fish(val))
+                self.stats[val] += 1
 
     def process_days(self, days):
         for x in range(days):

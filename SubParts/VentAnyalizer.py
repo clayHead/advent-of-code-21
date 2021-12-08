@@ -77,8 +77,10 @@ class VentAnyalizer:
         with open('../PuzzleInputs/d5-input', newline='') as f:
             lines = f.readlines()
 
-            # TODO Error checker
             for line in lines:
+                if line.count("->") != 1:
+                    print("ERROR! Key char not found")
+                    continue
                 split = line.split("->")
                 left = split[0].strip()
                 right = split[1].strip()
@@ -86,10 +88,14 @@ class VentAnyalizer:
                 l_ray_in = left.split(',')
                 r_ray_in = right.split(',')
 
-                x1 = int(l_ray_in[0])
-                y1 = int(l_ray_in[1])
-                x2 = int(r_ray_in[0])
-                y2 = int(r_ray_in[1])
+                try:
+                    x1 = int(l_ray_in[0])
+                    y1 = int(l_ray_in[1])
+                    x2 = int(r_ray_in[0])
+                    y2 = int(r_ray_in[1])
+                except ValueError:
+                    print("ERROR! Value is not an int")
+                    continue
 
                 ray = Ray(x1, y1, x2, y2)
                 self.rays.append(ray)

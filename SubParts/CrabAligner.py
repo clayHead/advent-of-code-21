@@ -9,11 +9,15 @@ class CrabAligner:
         with open('../PuzzleInputs/d7-input', newline='') as f:
             lines = f.readlines()
 
-            # TODO Error Checker
             strip = lines[0].strip()
             split = strip.split(',')
 
             for position in split:
+                # Fairly simple error checking here
+                if not position.isnumeric():
+                    print("ERROR! Input in not numeric. Input:", position)
+                    continue
+
                 self.positions.append(int(position))
 
     # This was used for part 1

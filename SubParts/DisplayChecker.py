@@ -1,3 +1,18 @@
+def error_checker(to_check, length):
+    if len(to_check) > length:
+        print("num args to much. Got:", len(to_check), "Expecting less than:", length)
+        return False
+    for val in to_check:
+        if len(val) > 7:
+            print(val, "is too long")
+            return False
+        for digit in val:
+            if digit >= 'h':
+                print(digit, "in", val, "is too big")
+                return False
+    return True
+
+
 class DisplayChecker:
     def __init__(self):
         self.signal_patterns = []
@@ -11,12 +26,24 @@ class DisplayChecker:
         with open('../PuzzleInputs/d8-input', newline='') as f:
             lines = f.readlines()
 
-            # TODO Error Checker
             for line in lines:
+                # Sanitize and check for key character
                 line = line.strip()
+                if line.count("|") != 1:
+                    print("ERROR! No '|' char found")
+                    continue
+
                 split = line.split(" | ")
                 left = split[0].split(" ")
                 right = split[1].split(" ")
+
+                # Check both sides
+                if not error_checker(left, 10):
+                    print("ERROR!")
+                    continue
+                if not error_checker(right, 5):
+                    print("ERROR!")
+                    continue
 
                 self.signal_patterns.append(left)
                 self.output_values.append(right)
@@ -37,7 +64,7 @@ class DisplayChecker:
         num = 0
         for output in self.output_values:
             for entry in output:
-                if len(entry) == 2 or len(entry) == 3 or len(entry) == 4 or len(entry) == 7:
+                if self.map_unique(entry) is not None:
                     num += 1
         return num
 
