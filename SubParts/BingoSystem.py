@@ -25,13 +25,6 @@ class BingoBoard:
     def append(self, line):
         self.board.append(line)
 
-    def get_board(self):
-        return self.board
-
-    def get_line(self, line):
-        if line <= 4:
-            return self.board[line]
-
     def check_win(self, draw):
         for x in range(5):
             horz = 0
@@ -58,17 +51,8 @@ class BingoBoard:
         for x in range(5):
             for y in range(5):
                 if self.board[x][y] == draw:
+                    self.board[x][y] = -1
                     return True
-
-    def pos_in_board(self, draw):
-        for x in range(5):
-            for y in range(5):
-                if self.board[x][y] == draw:
-                    return x, y
-        return None
-
-    def mark_position(self, x, y):
-        self.board[x][y] = -1
 
     def get_final_score(self):
         #print("Final board\n", self)
@@ -95,7 +79,7 @@ class BingoSystem:
         self.process_draws()
 
     def get_input(self):
-        with open('../TestInputs/d4.test', newline='') as f:
+        with open('../PuzzleInputs/d4.in', newline='') as f:
             lines = f.readlines()
 
             # TODO Missing Error check for length of bingo board
@@ -128,9 +112,7 @@ class BingoSystem:
             for board in self.boards:
                 # Don't process boards that have already won
                 if board not in self.already_won:
-                    pos = board.pos_in_board(draw)
-                    if pos is not None:
-                        board.mark_position(pos[0], pos[1])
+                    board.check_draw(draw)
 
             # Check for and handle winners
             self.check_for_winner(draw)
