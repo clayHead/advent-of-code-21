@@ -6,7 +6,7 @@ class CrabAligner:
         self.get_input()
 
     def get_input(self):
-        with open('../PuzzleInputs/d7-input', newline='') as f:
+        with open('../PuzzleInputs/d7.in', newline='') as f:
             lines = f.readlines()
 
             strip = lines[0].strip()

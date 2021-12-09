@@ -11,11 +11,15 @@ def is_list_of_nums(input):
 class BingoBoard:
     def __init__(self):
         self.board = []  # List of Lists
+        self.winning_draw = None
+        self.end_val = 0
 
     def __str__(self):
-        out = ""
-        for line in self.board:
-            out = out + str(line)
+        out = str(self.board[0])
+        for x in range(5):
+            if x == 0:
+                continue
+            out = out + "\n" + str(self.board[x])
         return out
 
     def append(self, line):
@@ -28,22 +32,64 @@ class BingoBoard:
         if line <= 4:
             return self.board[line]
 
+    def check_win(self, draw):
+        for x in range(5):
+            horz = 0
+            for y in range(5):
+                if self.board[x][y] == -1:
+                    horz += 1
+            if horz == 5:
+                #print("Found a winner horz\n", self)
+                self.winning_draw = draw
+                self.get_final_score()
+                return True
+        for y in range(5):
+            vert = 0
+            for x in range(5):
+                if self.board[x][y] == -1:
+                    vert += 1
+            if vert == 5:
+                self.winning_draw = draw
+                self.get_final_score()
+                return True
+        return False
+
+    def check_draw(self, draw):
+        for x in range(5):
+            for y in range(5):
+                if self.board[x][y] == draw:
+                    return True
+
+    def pos_in_board(self, draw):
+        for x in range(5):
+            for y in range(5):
+                if self.board[x][y] == draw:
+                    return x, y
+        return None
+
+    def mark_position(self, x, y):
+        self.board[x][y] = -1
+
+    def get_final_score(self):
+        #print("Final board\n", self)
+        total = 0
+        for x in range(5):
+            for y in range(5):
+                if self.board[x][y] >= 0:
+                    total += self.board[x][y]
+        self.end_val = total * self.winning_draw
+
 
 class BingoSystem:
     def __init__(self):
         self.boards = []
         self.draws = []
 
-        self.winning_board = BingoBoard()
-        self.winning_draw = 0
-        self.highestScore = 0
+        self.winning_boards = []
+        self.winning_draws = []
+        self.win_vals = []
 
         self.already_won = []
-
-        self.losing_board = BingoBoard()
-        self.num_wins = 0
-        self.last_draw = 0
-        self.lowest_score = 0
 
         self.get_input()
         self.process_draws()
@@ -62,7 +108,7 @@ class BingoSystem:
                     self.draws = is_list_of_nums(temp)
                 else:
                     line = is_list_of_nums(temp)
-                    if len(line) > 0:
+                    if len(line) == 5:
                         board.append(line)
                     elif x != 1:
                         # Don't count the first empty line
@@ -70,101 +116,52 @@ class BingoSystem:
                         board = BingoBoard()
             self.boards.append(board)
 
-    def pos_in_board(self, index, draw):
-        # Index is the index of the board to process
-        board = self.boards[index].get_board()
-        for x in range(5):
-            line = board[x]
-            for y in range(5):
-                if line[y] == draw:
-                    return x, y
-        return None
+            print(self.boards[0] == self.boards[0])
 
     def process_draws(self):
-        winning_draws = []
-        for val in self.draws:
-            # Update Board
-            for x in range(len(self.boards)):
-                pos = self.pos_in_board(x, val)
-                if pos is not None:
-                    self.boards[x].get_board()[pos[0]][pos[1]] = -1
+        # Go through each of the draws
+        for draw in self.draws:
+            # And update the entire set of boards
+            if len(self.boards) == 0:
+                print("No more boards! Draw:", draw)
+                break
+            for board in self.boards:
+                # Don't process boards that have already won
+                if board not in self.already_won:
+                    pos = board.pos_in_board(draw)
+                    if pos is not None:
+                        board.mark_position(pos[0], pos[1])
 
-            # Check for win
-            result = self.check_for_winner()
+            # Check for and handle winners
+            self.check_for_winner(draw)
 
-            # Handle win
-            if result.get('Result'):
-                self.num_wins = self.num_wins + 1
-                print(self.already_won)
-                winning_draws.append(val)
-                if self.num_wins == 1:
-                    print("Winner", self.boards[result.get('Winner')])
-                    self.winning_draw = val
-                    self.winning_board = self.boards[result.get('Winner')].get_board()
-                    self.get_win_val()
+            print("Remaining boards and amount of winners:", len(self.boards), len(self.winning_boards))
 
-        # Handle last win
-        print("How many winners", len(self.already_won))
-        self.last_draw = winning_draws[-1]
-        print("self.last_draw", self.last_draw)
+        # Process winners
+        self.get_win_vals()
 
-        print("Last Winner", self.already_won[-1])
-        self.losing_board = self.boards[self.already_won[-1]].get_board()
-        print(self.losing_board)
-        self.get_lose_val()
-        print("end of process")
+    def check_for_winner(self, draw):
+        for board in self.boards:
+            if board not in self.already_won and board.check_win(draw):
+                print(board)
+                self.already_won.append(board)
+                board.winning_draw = draw
+                self.winning_boards.append(board)
+                self.boards.remove(board)
+                return True
 
-    def check_for_winner(self):
-        return_dict = dict()
-        for x in range(len(self.boards)):
-            board = self.boards[x].get_board()
-            for y in range(5):
-                if board[y].count(-1) == 5 and x not in self.already_won:
-                    print("Horz winner", x)
-                    self.already_won.append(x)
-                    return_dict['Result'] = True
-                    return_dict['Winner'] = x
-                    return return_dict
-                else:
-                    num_seen = 0
-                    for z in range(5):
-                        if board[y][z] == -1:
-                            num_seen += 1
-                    if num_seen == 5 and x not in self.already_won:
-                        print("Vert winner", x)
-                        self.already_won.append(x)
-                        return_dict['Result'] = True
-                        return_dict['Winner'] = x
-                        return return_dict
+        return False
 
-        return_dict['Result'] = False
-        return_dict['Winner'] = -1
-        return return_dict
-
-    def get_win_val(self):
-        sum = 0
-        for x in range(5):
-            line = self.winning_board[x]
-            for val in line:
-                if val >= 0:
-                    sum += val
-        self.highestScore = sum * self.winning_draw
-
-    def get_lose_val(self):
-        sum = 0
-        for x in range(5):
-            line = self.losing_board[x]
-            for val in line:
-                if val >= 0:
-                    sum += val
-        print("sum and last draw", sum, self.last_draw)
-        self.lowest_score = sum * self.last_draw
+    def get_win_vals(self):
+        for board in self.winning_boards:
+            print(board.winning_draw, board.end_val)
+            self.win_vals.append(board.end_val)
 
 
 def main():
     bingo = BingoSystem()
-    print(bingo.highestScore)
-    print(bingo.lowest_score)
+    print("Num winners:", len(bingo.winning_boards))
+    print("First and last vals", bingo.winning_boards[0].end_val, bingo.winning_boards[-1].end_val)
 
 
 if __name__ == "__main__":

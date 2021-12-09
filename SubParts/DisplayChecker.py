@@ -23,7 +23,7 @@ class DisplayChecker:
         self.get_input()
 
     def get_input(self):
-        with open('../PuzzleInputs/d8-input', newline='') as f:
+        with open('../PuzzleInputs/d8.in', newline='') as f:
             lines = f.readlines()
 
             for line in lines:

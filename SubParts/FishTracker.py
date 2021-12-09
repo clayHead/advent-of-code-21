@@ -23,7 +23,7 @@ class FishTracker:
         self.get_input()
 
     def get_input(self):
-        with open('../PuzzleInputs/d6-input', newline='') as f:
+        with open('../PuzzleInputs/d6.in', newline='') as f:
             lines = f.readlines()
 
             strip = lines[0].strip()

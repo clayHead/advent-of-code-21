@@ -57,7 +57,7 @@ class HealthChecker:
         self.get_cO2()
 
     def get_input(self):
-        with open('../PuzzleInputs/d3-input', newline='') as f:
+        with open('../PuzzleInputs/d3.in', newline='') as f:
             lines = f.readlines()
 
             for line in lines:

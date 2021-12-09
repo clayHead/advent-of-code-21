@@ -74,7 +74,7 @@ class VentAnyalizer:
         self.find_vents()
 
     def get_input(self):
-        with open('../PuzzleInputs/d5-input', newline='') as f:
+        with open('../PuzzleInputs/d5.in', newline='') as f:
             lines = f.readlines()
 
             for line in lines:
