@@ -115,14 +115,14 @@ class BingoSystem:
                     board.check_draw(draw)
 
             # Check for and handle winners
-            self.check_for_winner(draw)
+            self.process_winners(draw)
 
             print("Remaining boards and amount of winners:", len(self.boards), len(self.winning_boards))
 
         # Process winners
         self.get_win_vals()
 
-    def check_for_winner(self, draw):
+    def process_winners(self, draw):
         for board in self.boards:
             if board not in self.already_won and board.check_win(draw):
                 print(board)
@@ -130,9 +130,6 @@ class BingoSystem:
                 board.winning_draw = draw
                 self.winning_boards.append(board)
                 self.boards.remove(board)
-                return True
-
-        return False
 
     def get_win_vals(self):
         for board in self.winning_boards:
